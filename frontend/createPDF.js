@@ -45,34 +45,35 @@ export const generatePDF = (allStudents, filePath) => {
       doc.pipe(writeStream);
 
       // PDF Page Dimensions (A4 Landscape: 841.89 x 595.28 points)
-      const pageWidth = 841.89;
-      const pageHeight = 595.28;
-
-      // Margins
-      const marginX = 20;
-      const marginY = 20;
-
-      // Rectangle dimensions to fit 3 columns and 2 rows
-      const rectWidth = (pageWidth - 3 * marginX) / 3;
-      const rectHeight = 140;
-
-      // Starting coordinates
-      let x = marginX;
-      let y = marginY;
-
-      // Add content dynamically for each student
-      allStudents.forEach((entry, index) => {
-        // Draw a rectangle for the student section with a dotted border
-        doc.rect(x, y, rectWidth, rectHeight).lineWidth(4).stroke();
-
-        // Add student details inside the rectangle with bold text
-        doc.fontSize(16).font("Helvetica-Bold");
-
-        // Align the text to the left
-        doc.text(`Name       :     ${entry.student}`, x + 10, y + 20);
-        doc.text(`Subject    :     ${entry.subject}`, x + 10, y + 50);
-        doc.text(`Class       :     ${entry.class}`, x + 10, y + 80);
-        doc.text(`Year         :     ${entry.year}`, x + 10, y + 110);
+    // PDF Page Dimensions (A4 Landscape: 841.89 x 595.28 points)
+    const pageWidth = 841.89; // points
+    const pageHeight = 595.28; // points
+  
+    // Margins
+    const marginX = 20;
+    const marginY = 20;
+  
+    // Rectangle dimensions to fit 3 columns and 2 rows
+    const rectWidth = (pageWidth - 0.005 * marginX) / 2.5;
+    const rectHeight = 140;
+  
+    // Starting coordinates
+    let x = marginX;
+    let y = marginY;
+  
+    // Add content dynamically for each student
+    allStudents.forEach((entry, index) => {
+      // Draw a rectangle for the student section with a dotted border
+      doc.rect(x, y, rectWidth, rectHeight).lineWidth(4).stroke();
+  
+      // Add student details inside the rectangle with bold text
+      doc.fontSize(14).font("Helvetica-Bold");
+      
+      // Align the text to the left
+      doc.text(`Name         :      ${entry.student}`, x + 10, y + 20);
+      doc.text(`Subject      :      ${entry.subject}`, x + 10, y + 50);
+      doc.text(`Class         :      ${entry.class}`, x + 10, y + 80);
+      doc.text(`Year           :      ${entry.year}`, x + 10, y + 110);
 
         // Move to the next rectangle position
         x += rectWidth + marginX; // Move horizontally

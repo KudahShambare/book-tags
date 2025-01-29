@@ -29,17 +29,16 @@ generate.addEventListener('click', (e) => {
         },
         body: JSON.stringify(dataToSend),
     })
-    .then((response) => response.blob())
-    .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'students.pdf';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    })
+    .then((response) => {
+        if (response.ok) {
+            setTimeout(() => {
+                window.location.href = '/download';
+            }, 2000);   
+        }
+        throw new Error('Failed to generate PDF');
+    }
+    )
+  
     .catch((error) => {
         console.error('Error:', error);
     });

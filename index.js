@@ -22,6 +22,12 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.sendFile( path.join(__dirname + "/frontend/index.html"));
 });
+
+
+app.get("/download", (req, res) => {
+  res.sendFile(path.join(__dirname, "output", "students.pdf"));
+});
+
 // Route to generate the PDF
 
 app.post("/file", async (req, res) => {
