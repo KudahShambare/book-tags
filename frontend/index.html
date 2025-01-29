@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #list {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #list h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 1024px) {
+            form {
+                gap: 20px;
+                padding: 40px;
+            }
+
+            button {
+                font-size: 18px;
+            }
+
+            input {
+                font-size: 18px;
+                padding: 14px;
+            }
+
+            #list h1 {
+                font-size: 26px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            form {
+                padding: 20px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            input {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            form {
+                gap: 10px;
+                padding: 15px;
+            }
+
+            button {
+                font-size: 12px;
+            }
+
+            input {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Name Tag Generator</h1>
+
+    <form>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="class">Class:</label>
+        <input type="text" id="class" name="class" required>
+        <button id="add">Add</button>
+        <button id="generate">Generate</button>
+    </form>
+
+    <div id="list">
+        <h1>Students</h1>
+    </div>
+
+    <script defer src="script.js" type="module"></script>
+</body>
+
+</html>
