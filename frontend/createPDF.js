@@ -33,68 +33,88 @@ export const generatePDF = (allStudents, filePath) => {
     try {
       const doc = new PDFDocument({
         size: [841.89, 595.28], // A4 Landscape
-        margins: {
-          top: 20,
-          bottom: 20,
-          left: 20,
-          right: 20
-        }
+        margins: { top: 20, bottom: 20, left: 20, right: 20 }
       });
 
       const writeStream = fs.createWriteStream(filePath);
       doc.pipe(writeStream);
 
       // PDF Page Dimensions (A4 Landscape: 841.89 x 595.28 points)
-    // PDF Page Dimensions (A4 Landscape: 841.89 x 595.28 points)
-    const pageWidth = 841.89; // points
-    const pageHeight = 595.28; // points
-  
-    // Margins
-    const marginX = 20;
-    const marginY = 20;
-  
-    // Rectangle dimensions to fit 3 columns and 2 rows
-    const rectWidth = (pageWidth - 0.005 * marginX) / 2.5;
-    const rectHeight = 140;
-  
-    // Starting coordinates
-    let x = marginX;
-    let y = marginY;
-  
-    // Add content dynamically for each student
-    allStudents.forEach((entry, index) => {
-      // Draw a rectangle for the student section with a dotted border
-      doc.rect(x, y, rectWidth, rectHeight).lineWidth(4).stroke();
-  
-      // Add student details inside the rectangle with bold text
-      doc.fontSize(14).font("Helvetica-Bold");
+      const pageWidth = 841.89;
+      const pageHeight = 595.28;
+
+      // Margins
+      const marginX = 20;
+      const marginY = 20;
+      const gapX = 15; // Horizontal gap between rectangles
+      const gapY = 15; // Vertical gap between rectangles
+
+      // Rectangle dimensions: 13cm × 8cm
+      // Convert cm to points (1 cm = 28.3465 points)
+      const rectWidth = 13 * 28.3465;  // 13 cm = 368.5 points
+      const rectHeight = 8 * 28.3465;   // 8 cm = 226.8 points
       
-      // Align the text to the left
-      doc.text(`Name         :      ${entry.student}`, x + 10, y + 20);
-      doc.text(`Subject      :      ${entry.subject}`, x + 10, y + 50);
-      doc.text(`Class         :      ${entry.class}`, x + 10, y + 80);
-      doc.text(`Year           :      ${entry.year}`, x + 10, y + 110);
+      // Padding inside each rectangle
+      const paddingX = 15;
+      const paddingY = 15;
 
-        // Move to the next rectangle position
-        x += rectWidth + marginX; // Move horizontally
-        if (x + rectWidth > pageWidth) {
-          x = marginX; // Reset X
-          y += rectHeight + marginY; // Move to the next row
-        }
+      // Starting coordinates
+      let x = marginX;
+      let y = marginY;
 
-        // Add a new page after every 6 rectangles
-        if ((index + 1) % 6 === 0) {
-          doc.addPage({
-            size: [841.89, 595.28], // A4 Landscape
-            margins: {
-              top: 20,
-              bottom: 20,
-              left: 20,
-              right: 20
-            }
-          });
-          x = marginX; // Reset X
-          y = marginY; // Reset Y
+      // Add content dynamically for each student
+      allStudents.forEach((entry, index) => {
+        // Draw a rectangle for the student section with rounded corners
+        doc.roundedRect(x, y, rectWidth, rectHeight, 5)
+           .lineWidth(1.5)
+           .stroke();
+
+        // Add student details inside the rectangle with bold text
+        doc.fontSize(20).font("Helvetica-Bold");
+        
+        // Calculate vertical spacing to distribute text evenly
+        const contentHeight = 120; // Total height of all text
+        const textStartY = y + paddingY;
+        const lineSpacing = (rectHeight - 2 * paddingY - contentHeight) / 3;
+        
+        doc.text(`Name: ${entry.student}`, x + paddingX, textStartY, {
+          width: rectWidth - 2 * paddingX
+        });
+        doc.text(`Subject: ${entry.subject}`, x + paddingX, textStartY + 30 + lineSpacing, {
+          width: rectWidth - 2 * paddingX
+        });
+        doc.text(`Class: ${entry.class}`, x + paddingX, textStartY + 60 + 2 * lineSpacing, {
+          width: rectWidth - 2 * paddingX
+        });
+        doc.text(`Year: ${entry.year}`, x + paddingX, textStartY + 90 + 3 * lineSpacing, {
+          width: rectWidth - 2 * paddingX
+        });
+
+        // Move to next position
+        const positionInPage = index % 4;
+        
+        if (positionInPage === 0) {
+          // Top-left (already positioned)
+          x = marginX + rectWidth + gapX; // Next: top-right
+          y = marginY;
+        } else if (positionInPage === 1) {
+          // Top-right, move to bottom-left
+          x = marginX;
+          y = marginY + rectHeight + gapY;
+        } else if (positionInPage === 2) {
+          // Bottom-left, move to bottom-right
+          x = marginX + rectWidth + gapX;
+          y = marginY + rectHeight + gapY;
+        } else if (positionInPage === 3) {
+          // Bottom-right, add new page if more entries exist
+          if (index < allStudents.length - 1) {
+            doc.addPage({
+              size: [841.89, 595.28], // A4 Landscape
+              margins: { top: 20, bottom: 20, left: 20, right: 20 }
+            });
+          }
+          x = marginX;
+          y = marginY;
         }
       });
 
@@ -106,6 +126,7 @@ export const generatePDF = (allStudents, filePath) => {
         console.log("PDF generated successfully at:", filePath);
         resolve(filePath);
       });
+
       writeStream.on("error", (error) => {
         console.error("Error writing PDF file:", error);
         reject(error);
