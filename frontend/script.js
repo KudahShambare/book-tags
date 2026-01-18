@@ -11,8 +11,15 @@ addStudent.addEventListener('click', (e) => {
     const name = document.getElementById('name').value;
     const className = document.getElementById('class').value;
 students.push({name, className});
-pTag.innerHTML = `${name} || ${className}`;
+pTag.innerHTML = `
+<div>
+  <span>${name} || ${className}</span>
+  <button onclick="this.parentElement.remove()">Remove</button>
+</div>
+`;
+
   list.appendChild(pTag)
+  document.getElementById('name').value = null;
     })
 
 
